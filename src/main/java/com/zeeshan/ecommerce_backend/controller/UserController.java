@@ -1,8 +1,9 @@
-package com.zeeshan.ecommercebackend.controller;
+package com.zeeshan.ecommerce_backend.controller;
 
-import com.zeeshan.ecommercebackend.model.User;
-import com.zeeshan.ecommercebackend.repository.UserRepository;
+import com.zeeshan.ecommerce_backend.model.User;
+import com.zeeshan.ecommerce_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,15 +13,33 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+    private UserService userService;
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userRepository.save(user);
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        return ResponseEntity.ok(userService.saveUser(user));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        User updated = userService.updateUser(id, user);
+        return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

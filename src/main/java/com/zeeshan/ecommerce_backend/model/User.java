@@ -1,4 +1,4 @@
-package com.zeeshan..model;
+package com.zeeshan.ecommerce_backend.model;
 
 import jakarta.persistence.*;
 import lombok.*;
